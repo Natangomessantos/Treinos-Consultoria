@@ -213,11 +213,29 @@ body::before {
   border-radius:var(--radius);
   margin-bottom:9px;
   overflow:hidden;
-  transition:transform .15s
+  transition:all 0.3s ease
 }
 
-.ex-card:active {
-  transform:scale(.98)
+.ex-card.done {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.ex-card.done .ex-name {
+  text-decoration: line-through;
+}
+
+.check-area {
+  padding: 0 5px 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+.ex-check {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--teal);
+  cursor: pointer;
 }
 
 .ex-card.biset {
@@ -318,7 +336,8 @@ body::before {
 .stat {
   padding:10px 0;
   text-align:center;
-  border-right:1px solid rgba(255,255,255,.06)
+  border-right:1px solid rgba(255,255,255,.06);
+  cursor: pointer;
 }
 
 .stat:last-child {
@@ -368,6 +387,40 @@ body::before {
   font-weight:300
 }
 
+/* TIMER OVERLAY */
+
+#timer-float {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  padding: 10px 30px;
+  border-radius: 30px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  z-index: 9999;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* FINISH CARD */
+
+.finish-screen {
+  margin-top: 20px;
+  padding: 20px;
+  background: linear-gradient(45deg, #27AE60, #2ecc71);
+  border-radius: var(--radius);
+  text-align: center;
+  animation: fadeUp 0.5s ease;
+}
+
+.finish-msg {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+}
+
 .footer {
   text-align:center;
   padding:20px;
@@ -381,6 +434,8 @@ body::before {
 </head>
 
 <body>
+
+<div id="timer-float">DESCANSO: <span id="timer-count">0</span>s</div>
 
 <div class="wrap">
 
@@ -416,7 +471,7 @@ body::before {
   </div>
 
   
-        <div class="treino-block active" id="treino-A">
+        <div class="treino-block active" id="treino-A" data-total="7">
 
           <div class="block-header" style="border-left: 4px solid #4A90D9">
 
@@ -432,12 +487,16 @@ body::before {
           </div>
 
           
-      <div class="ex-card">
+      <div class="ex-card" id="card-A_0">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_0')">
+          </div>
+
           <div class="ex-num">1</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_0">
             Supino inclinado com halteres
           </div>
 
@@ -472,9 +531,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -484,12 +543,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-A_1">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_1')">
+          </div>
+
           <div class="ex-num">2</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_1">
             Crossover
           </div>
 
@@ -524,9 +587,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -536,12 +599,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-A_2">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_2')">
+          </div>
+
           <div class="ex-num">3</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_2">
             Remada baixa triângulo
           </div>
 
@@ -576,9 +643,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -588,12 +655,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-A_3">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_3')">
+          </div>
+
           <div class="ex-num">4</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_3">
             Crucifixo inverso na máquina
           </div>
 
@@ -628,9 +699,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -640,12 +711,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-A_4">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_4')">
+          </div>
+
           <div class="ex-num">5</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_4">
             Rosca unilateral na polia
           </div>
 
@@ -680,9 +755,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -692,12 +767,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card superset">
+      <div class="ex-card superset" id="card-A_5">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_5')">
+          </div>
+
           <div class="ex-num">6</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_5">
             Tríceps pulley
           </div>
 
@@ -738,9 +817,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -750,12 +829,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card superset">
+      <div class="ex-card superset" id="card-A_6">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('A_6')">
+          </div>
+
           <div class="ex-num">7</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-A_6">
             Rosca inversa com barra
           </div>
 
@@ -796,9 +879,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -808,10 +891,14 @@ body::before {
       </div>
     
 
+          <div class="finish-screen" id="finish-A" style="display:none">
+            <div class="finish-msg">💪 TREINO FINALIZADO!</div>
+          </div>
+
         </div>
         
 
-        <div class="treino-block " id="treino-B">
+        <div class="treino-block " id="treino-B" data-total="7">
 
           <div class="block-header" style="border-left: 4px solid #E67E22">
 
@@ -827,12 +914,16 @@ body::before {
           </div>
 
           
-      <div class="ex-card">
+      <div class="ex-card" id="card-B_0">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_0')">
+          </div>
+
           <div class="ex-num">1</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_0">
             Cadeira extensora articulada
           </div>
 
@@ -867,9 +958,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -879,12 +970,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-B_1">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_1')">
+          </div>
+
           <div class="ex-num">2</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_1">
             Leg-press 45°
           </div>
 
@@ -919,9 +1014,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -931,12 +1026,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-B_2">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_2')">
+          </div>
+
           <div class="ex-num">3</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_2">
             Belt squat
           </div>
 
@@ -971,9 +1070,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -983,12 +1082,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-B_3">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_3')">
+          </div>
+
           <div class="ex-num">4</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_3">
             Cadeira flexora
           </div>
 
@@ -1023,9 +1126,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1035,12 +1138,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card superset">
+      <div class="ex-card superset" id="card-B_4">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_4')">
+          </div>
+
           <div class="ex-num">5</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_4">
             Abdutora
           </div>
 
@@ -1081,9 +1188,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1093,12 +1200,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card superset">
+      <div class="ex-card superset" id="card-B_5">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_5')">
+          </div>
+
           <div class="ex-num">6</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_5">
             Adutora
           </div>
 
@@ -1139,9 +1250,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1151,12 +1262,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-B_6">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('B_6')">
+          </div>
+
           <div class="ex-num">7</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-B_6">
             Panturrilha
           </div>
 
@@ -1191,9 +1306,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1203,10 +1318,14 @@ body::before {
       </div>
     
 
+          <div class="finish-screen" id="finish-B" style="display:none">
+            <div class="finish-msg">💪 TREINO FINALIZADO!</div>
+          </div>
+
         </div>
         
 
-        <div class="treino-block " id="treino-C">
+        <div class="treino-block " id="treino-C" data-total="7">
 
           <div class="block-header" style="border-left: 4px solid #27AE60">
 
@@ -1222,12 +1341,16 @@ body::before {
           </div>
 
           
-      <div class="ex-card">
+      <div class="ex-card" id="card-C_0">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_0')">
+          </div>
+
           <div class="ex-num">1</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_0">
             Supino reto com barra
           </div>
 
@@ -1262,9 +1385,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1274,12 +1397,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-C_1">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_1')">
+          </div>
+
           <div class="ex-num">2</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_1">
             Crossover
           </div>
 
@@ -1314,9 +1441,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1326,12 +1453,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-C_2">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_2')">
+          </div>
+
           <div class="ex-num">3</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_2">
             Pulley pronado
           </div>
 
@@ -1366,9 +1497,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1378,12 +1509,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card superset">
+      <div class="ex-card superset" id="card-C_3">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_3')">
+          </div>
+
           <div class="ex-num">4</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_3">
             Elevação lateral na polia
           </div>
 
@@ -1424,9 +1559,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1436,12 +1571,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-C_4">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_4')">
+          </div>
+
           <div class="ex-num">5</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_4">
             Elevação frontal alternada
           </div>
 
@@ -1476,9 +1615,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1488,12 +1627,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-C_5">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_5')">
+          </div>
+
           <div class="ex-num">6</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_5">
             Scott máquina
           </div>
 
@@ -1528,9 +1671,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1540,12 +1683,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card superset">
+      <div class="ex-card superset" id="card-C_6">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('C_6')">
+          </div>
+
           <div class="ex-num">7</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-C_6">
             Rosca 45°
           </div>
 
@@ -1586,9 +1733,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1598,10 +1745,14 @@ body::before {
       </div>
     
 
+          <div class="finish-screen" id="finish-C" style="display:none">
+            <div class="finish-msg">💪 TREINO FINALIZADO!</div>
+          </div>
+
         </div>
         
 
-        <div class="treino-block " id="treino-D">
+        <div class="treino-block " id="treino-D" data-total="6">
 
           <div class="block-header" style="border-left: 4px solid #8E44AD">
 
@@ -1617,12 +1768,16 @@ body::before {
           </div>
 
           
-      <div class="ex-card">
+      <div class="ex-card" id="card-D_0">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('D_0')">
+          </div>
+
           <div class="ex-num">1</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-D_0">
             Banco romano
           </div>
 
@@ -1657,9 +1812,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1669,12 +1824,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-D_1">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('D_1')">
+          </div>
+
           <div class="ex-num">2</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-D_1">
             Belt squat
           </div>
 
@@ -1709,9 +1868,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1721,12 +1880,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-D_2">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('D_2')">
+          </div>
+
           <div class="ex-num">3</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-D_2">
             Leg-press
           </div>
 
@@ -1761,9 +1924,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1773,12 +1936,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-D_3">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('D_3')">
+          </div>
+
           <div class="ex-num">4</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-D_3">
             Mesa flexora
           </div>
 
@@ -1813,9 +1980,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1825,12 +1992,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-D_4">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('D_4')">
+          </div>
+
           <div class="ex-num">5</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-D_4">
             Elevação pélvica
           </div>
 
@@ -1865,9 +2036,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1877,12 +2048,16 @@ body::before {
       </div>
     
 
-      <div class="ex-card">
+      <div class="ex-card" id="card-D_5">
 
         <div class="ex-main">
+          <div class="check-area">
+            <input type="checkbox" class="ex-check" onclick="toggleEx('D_5')">
+          </div>
+
           <div class="ex-num">6</div>
 
-          <div class="ex-name">
+          <div class="ex-name" id="name-D_5">
             Cadeira solear
           </div>
 
@@ -1917,9 +2092,9 @@ body::before {
 
           </div>
 
-          <div class="stat">
-            <div class="stat-val">60s</div>
-            <div class="stat-lbl">Desc.</div>
+          <div class="stat" onclick="startTimer(60)">
+            <div class="stat-val" style="color:var(--teal)">60s</div>
+            <div class="stat-lbl">Desc. ⏱️</div>
           </div>
 
         </div>
@@ -1928,6 +2103,10 @@ body::before {
 
       </div>
     
+
+          <div class="finish-screen" id="finish-D" style="display:none">
+            <div class="finish-msg">💪 TREINO FINALIZADO!</div>
+          </div>
 
         </div>
         
@@ -1956,6 +2135,52 @@ function showTreino(label, btn) {
     .classList.add('active');
 
   btn.classList.add('active');
+}
+
+// LOGICA DOS CHECKBOXES
+function toggleEx(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.toggle('done');
+  checkFinish();
+}
+
+// VERIFICAR TREINO FINALIZADO
+function checkFinish() {
+  const activeBlock = document.querySelector('.treino-block.active');
+  const total = parseInt(activeBlock.dataset.total);
+  const checked = activeBlock.querySelectorAll('.ex-check:checked').length;
+  const label = activeBlock.id.replace('treino-', '');
+  const finishDiv = document.getElementById('finish-' + label);
+
+  if (checked === total && total > 0) {
+    finishDiv.style.display = 'block';
+  } else {
+    finishDiv.style.display = 'none';
+  }
+}
+
+// TIMER DE DESCANSO
+let timerInt;
+function startTimer(seconds) {
+  if(seconds <= 0) return;
+  clearInterval(timerInt);
+  
+  const float = document.getElementById('timer-float');
+  const display = document.getElementById('timer-count');
+  
+  float.style.display = 'block';
+  let timeLeft = seconds;
+  display.innerText = timeLeft;
+
+  timerInt = setInterval(() => {
+    timeLeft--;
+    display.innerText = timeLeft;
+    if(timeLeft <= 0) {
+      clearInterval(timerInt);
+      float.style.display = 'none';
+      alert("Descanso finalizado!");
+    }
+  }, 1000);
 }
 
 // SALVAR CARGAS
