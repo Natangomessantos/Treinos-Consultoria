@@ -120,10 +120,65 @@ body::before {
 
 .empty-msg { text-align:center; padding:40px 20px; color:var(--gray); font-size:13px; font-style:italic }
 .footer { text-align:center; padding:20px; font-size:11px; color:var(--gray); font-weight:300 }
+
+/* BOTÃO VÍDEO */
+.btn-video {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  font-size:16px;
+  text-decoration:none;
+  flex-shrink:0;
+  transition:background .2s;
+}
+.btn-video:hover { background:rgba(255,255,255,.18) }
+
+/* MODO CLARO */
+body.light {
+  --navy:#f0f4f8; --accent:#2563eb; --teal:#0e9f7e; --white:#1a1a2e;
+  --gray:#4a5568; --light:#2d3748;
+}
+body.light .ex-card { background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.1) }
+body.light .block-header { background:rgba(0,0,0,.04) }
+body.light .bottom-nav { background:rgba(240,244,248,.95) }
+body.light .tab-btn { background:rgba(0,0,0,.06); color:#4a5568 }
+body.light .carga-input { background:rgba(0,0,0,.08); color:#1a1a2e; border-color:rgba(0,0,0,.15) }
+body.light body::before { background:none }
+.theme-toggle {
+  position:fixed; top:16px; right:16px; z-index:200;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15);
+  font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+body.light .theme-toggle { background:rgba(0,0,0,.08); border-color:rgba(0,0,0,.12) }
+.progress-bar-wrap { height:4px; background:rgba(255,255,255,.08); margin:0 14px 12px; border-radius:2px; overflow:hidden }
+body.light .progress-bar-wrap { background:rgba(0,0,0,.08) }
+.progress-bar-fill { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--accent),var(--teal)); transition:width .4s ease }
+.series-counter { display:flex; align-items:center; justify-content:center; flex-direction:column; cursor:pointer; user-select:none }
+.series-dots { display:flex; gap:4px; margin-top:4px; justify-content:center }
+.series-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,.2); transition:background .2s }
+.series-dot.done { background:var(--teal) }
+.nota-wrap { padding:14px; border-top:1px solid rgba(255,255,255,.08) }
+.nota-wrap textarea { width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:10px; color:#fff; font-family:'DM Sans',sans-serif; font-size:13px; padding:10px 12px; resize:none; outline:none; min-height:70px }
+body.light .nota-wrap textarea { background:rgba(0,0,0,.06); color:#1a1a2e }
+.nota-wrap textarea::placeholder { color:var(--gray) }
+.nota-lbl { font-size:10px; color:var(--gray); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px }
+.last-date { font-size:11px; color:var(--gray); margin-top:4px; font-style:italic }
+.share-btn { display:block; width:100%; padding:12px; margin-top:8px; background:rgba(255,255,255,.08); color:#fff; border:1px solid rgba(255,255,255,.15); border-radius:10px; font-family:'Bebas Neue',sans-serif; font-size:15px; letter-spacing:1px; cursor:pointer }
+body.light .share-btn { background:rgba(0,0,0,.08); color:#1a1a2e }
+#offline-banner { display:none; position:fixed; top:0; left:0; right:0; z-index:999; background:#E74C3C; color:#fff; text-align:center; font-size:12px; padding:6px }
+
 </style>
 </head>
 <body>
 
+<div id="offline-banner">📵 Sem conexão — modo offline ativo</div>
+<button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">🌙</button>
 <div id="timer-float">DESCANSO: <span id="timer-count">0</span>s</div>
 
 <div class="wrap">
@@ -148,11 +203,15 @@ body::before {
         <div class="treino-block active" id="treino-A"
              data-total="7" data-label="A">
 
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="prog-A" style="width:0%"></div>
+          </div>
           <div class="block-header" style="border-left:4px solid #4A90D9">
             <div class="block-letter" style="color:#4A90D9">A</div>
             <div class="block-info">
               <div class="block-title">Treino A</div>
               <div class="block-sub">7 exercícios</div>
+              <div class="last-date" id="last-date-A"></div>
             </div>
           </div>
 
@@ -166,15 +225,18 @@ body::before {
           <div class="ex-num">1</div>
           <div class="ex-name" id="name-A_0">Supino inclinado com halteres</div>
           <div class="ex-muscle">Peitoral</div>
+          <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrIp8AAAAAATXzCDMJVqGC3Kgg8yWcsJE?e=zxchX2" target="_blank">🎬</a>
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_0', '4')"
+               data-total="4" data-done="0" id="sc-A_0">
+            <div class="stat-val" id="sc-val-A_0">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_0"></div>
           </div>
 
           <div class="stat">
@@ -216,15 +278,18 @@ body::before {
           <div class="ex-num">2</div>
           <div class="ex-name" id="name-A_1">Crossover</div>
           <div class="ex-muscle">Peitoral</div>
+          <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr8JcAAAAAAe_c--Kq9nnGohn3m94X7ew?e=E4FFeN" target="_blank">🎬</a>
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_1', '4')"
+               data-total="4" data-done="0" id="sc-A_1">
+            <div class="stat-val" id="sc-val-A_1">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_1"></div>
           </div>
 
           <div class="stat">
@@ -266,15 +331,18 @@ body::before {
           <div class="ex-num">3</div>
           <div class="ex-name" id="name-A_2">Remada baixa com triângulo</div>
           <div class="ex-muscle">Costas</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_2', '4')"
+               data-total="4" data-done="0" id="sc-A_2">
+            <div class="stat-val" id="sc-val-A_2">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_2"></div>
           </div>
 
           <div class="stat">
@@ -316,15 +384,18 @@ body::before {
           <div class="ex-num">4</div>
           <div class="ex-name" id="name-A_3">Crucifixo inverso na máquina</div>
           <div class="ex-muscle">Ombro</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_3', '4')"
+               data-total="4" data-done="0" id="sc-A_3">
+            <div class="stat-val" id="sc-val-A_3">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_3"></div>
           </div>
 
           <div class="stat">
@@ -366,15 +437,18 @@ body::before {
           <div class="ex-num">5</div>
           <div class="ex-name" id="name-A_4">Rosca unilateral na polia</div>
           <div class="ex-muscle">Bíceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_4', '4')"
+               data-total="4" data-done="0" id="sc-A_4">
+            <div class="stat-val" id="sc-val-A_4">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_4"></div>
           </div>
 
           <div class="stat">
@@ -416,6 +490,7 @@ body::before {
           <div class="ex-num">6</div>
           <div class="ex-name" id="name-A_5">Tríceps pulley</div>
           <div class="ex-muscle">Tríceps</div>
+          
         </div>
 
         
@@ -427,9 +502,11 @@ body::before {
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_5', '4')"
+               data-total="4" data-done="0" id="sc-A_5">
+            <div class="stat-val" id="sc-val-A_5">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_5"></div>
           </div>
 
           <div class="stat">
@@ -471,6 +548,7 @@ body::before {
           <div class="ex-num">7</div>
           <div class="ex-name" id="name-A_6">Rosca inversa com barra</div>
           <div class="ex-muscle">Antebraço</div>
+          
         </div>
 
         
@@ -482,9 +560,11 @@ body::before {
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('A_6', '4')"
+               data-total="4" data-done="0" id="sc-A_6">
+            <div class="stat-val" id="sc-val-A_6">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-A_6"></div>
           </div>
 
           <div class="stat">
@@ -533,11 +613,15 @@ body::before {
         <div class="treino-block " id="treino-B"
              data-total="7" data-label="B">
 
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="prog-B" style="width:0%"></div>
+          </div>
           <div class="block-header" style="border-left:4px solid #E67E22">
             <div class="block-letter" style="color:#E67E22">B</div>
             <div class="block-info">
               <div class="block-title">Treino B</div>
               <div class="block-sub">7 exercícios</div>
+              <div class="last-date" id="last-date-B"></div>
             </div>
           </div>
 
@@ -551,15 +635,18 @@ body::before {
           <div class="ex-num">1</div>
           <div class="ex-name" id="name-B_0">Cadeira extensora</div>
           <div class="ex-muscle">Quadríceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('B_0', '4')"
+               data-total="4" data-done="0" id="sc-B_0">
+            <div class="stat-val" id="sc-val-B_0">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_0"></div>
           </div>
 
           <div class="stat">
@@ -601,15 +688,18 @@ body::before {
           <div class="ex-num">2</div>
           <div class="ex-name" id="name-B_1">Leg press 45</div>
           <div class="ex-muscle">Quadríceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">3</div>
+          <div class="stat series-counter" onclick="tickSerie('B_1', '3')"
+               data-total="3" data-done="0" id="sc-B_1">
+            <div class="stat-val" id="sc-val-B_1">0/3</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_1"></div>
           </div>
 
           <div class="stat">
@@ -651,15 +741,18 @@ body::before {
           <div class="ex-num">3</div>
           <div class="ex-name" id="name-B_2">Belt squat</div>
           <div class="ex-muscle">Quadríceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('B_2', '4')"
+               data-total="4" data-done="0" id="sc-B_2">
+            <div class="stat-val" id="sc-val-B_2">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_2"></div>
           </div>
 
           <div class="stat">
@@ -701,15 +794,18 @@ body::before {
           <div class="ex-num">4</div>
           <div class="ex-name" id="name-B_3">Cadeira flexora</div>
           <div class="ex-muscle">Posterior</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('B_3', '4')"
+               data-total="4" data-done="0" id="sc-B_3">
+            <div class="stat-val" id="sc-val-B_3">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_3"></div>
           </div>
 
           <div class="stat">
@@ -751,6 +847,7 @@ body::before {
           <div class="ex-num">5</div>
           <div class="ex-name" id="name-B_4">Cadeira abdutora</div>
           <div class="ex-muscle">Glúteos</div>
+          
         </div>
 
         
@@ -762,9 +859,11 @@ body::before {
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('B_4', '4')"
+               data-total="4" data-done="0" id="sc-B_4">
+            <div class="stat-val" id="sc-val-B_4">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_4"></div>
           </div>
 
           <div class="stat">
@@ -806,6 +905,7 @@ body::before {
           <div class="ex-num">6</div>
           <div class="ex-name" id="name-B_5">Cadeira adutora</div>
           
+          
         </div>
 
         
@@ -817,9 +917,11 @@ body::before {
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('B_5', '4')"
+               data-total="4" data-done="0" id="sc-B_5">
+            <div class="stat-val" id="sc-val-B_5">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_5"></div>
           </div>
 
           <div class="stat">
@@ -861,15 +963,18 @@ body::before {
           <div class="ex-num">7</div>
           <div class="ex-name" id="name-B_6">Panturrilha na máquina</div>
           
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('B_6', '4')"
+               data-total="4" data-done="0" id="sc-B_6">
+            <div class="stat-val" id="sc-val-B_6">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-B_6"></div>
           </div>
 
           <div class="stat">
@@ -918,11 +1023,15 @@ body::before {
         <div class="treino-block " id="treino-C"
              data-total="7" data-label="C">
 
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="prog-C" style="width:0%"></div>
+          </div>
           <div class="block-header" style="border-left:4px solid #27AE60">
             <div class="block-letter" style="color:#27AE60">C</div>
             <div class="block-info">
               <div class="block-title">Treino C</div>
               <div class="block-sub">7 exercícios</div>
+              <div class="last-date" id="last-date-C"></div>
             </div>
           </div>
 
@@ -936,15 +1045,18 @@ body::before {
           <div class="ex-num">1</div>
           <div class="ex-name" id="name-C_0">Supino reto com barra</div>
           <div class="ex-muscle">Peitoral</div>
+          <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBrIp8AAAAAATXzCDMJVqGC3Kgg8yWcsJE?e=zxchX2" target="_blank">🎬</a>
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">3</div>
+          <div class="stat series-counter" onclick="tickSerie('C_0', '3')"
+               data-total="3" data-done="0" id="sc-C_0">
+            <div class="stat-val" id="sc-val-C_0">0/3</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_0"></div>
           </div>
 
           <div class="stat">
@@ -986,15 +1098,18 @@ body::before {
           <div class="ex-num">2</div>
           <div class="ex-name" id="name-C_1">Crossover</div>
           <div class="ex-muscle">Peitoral</div>
+          <a class="btn-video" href="https://1drv.ms/v/c/6be800b63605c276/IQB2wgU2tgDoIIBr8JcAAAAAAe_c--Kq9nnGohn3m94X7ew?e=E4FFeN" target="_blank">🎬</a>
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('C_1', '4')"
+               data-total="4" data-done="0" id="sc-C_1">
+            <div class="stat-val" id="sc-val-C_1">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_1"></div>
           </div>
 
           <div class="stat">
@@ -1036,15 +1151,18 @@ body::before {
           <div class="ex-num">3</div>
           <div class="ex-name" id="name-C_2">Pulley pronado</div>
           <div class="ex-muscle">Costas</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('C_2', '4')"
+               data-total="4" data-done="0" id="sc-C_2">
+            <div class="stat-val" id="sc-val-C_2">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_2"></div>
           </div>
 
           <div class="stat">
@@ -1086,6 +1204,7 @@ body::before {
           <div class="ex-num">4</div>
           <div class="ex-name" id="name-C_3">Elevação lateral</div>
           <div class="ex-muscle">Ombro</div>
+          
         </div>
 
         
@@ -1097,9 +1216,11 @@ body::before {
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('C_3', '4')"
+               data-total="4" data-done="0" id="sc-C_3">
+            <div class="stat-val" id="sc-val-C_3">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_3"></div>
           </div>
 
           <div class="stat">
@@ -1141,15 +1262,18 @@ body::before {
           <div class="ex-num">5</div>
           <div class="ex-name" id="name-C_4">Elevação frontal</div>
           <div class="ex-muscle">Ombro</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('C_4', '4')"
+               data-total="4" data-done="0" id="sc-C_4">
+            <div class="stat-val" id="sc-val-C_4">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_4"></div>
           </div>
 
           <div class="stat">
@@ -1191,15 +1315,18 @@ body::before {
           <div class="ex-num">6</div>
           <div class="ex-name" id="name-C_5">Scott máquina</div>
           <div class="ex-muscle">Bíceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('C_5', '4')"
+               data-total="4" data-done="0" id="sc-C_5">
+            <div class="stat-val" id="sc-val-C_5">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_5"></div>
           </div>
 
           <div class="stat">
@@ -1241,6 +1368,7 @@ body::before {
           <div class="ex-num">7</div>
           <div class="ex-name" id="name-C_6">Rosca 45° </div>
           <div class="ex-muscle">Bíceps</div>
+          
         </div>
 
         
@@ -1252,9 +1380,11 @@ body::before {
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('C_6', '4')"
+               data-total="4" data-done="0" id="sc-C_6">
+            <div class="stat-val" id="sc-val-C_6">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-C_6"></div>
           </div>
 
           <div class="stat">
@@ -1303,11 +1433,15 @@ body::before {
         <div class="treino-block " id="treino-D"
              data-total="6" data-label="D">
 
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="prog-D" style="width:0%"></div>
+          </div>
           <div class="block-header" style="border-left:4px solid #8E44AD">
             <div class="block-letter" style="color:#8E44AD">D</div>
             <div class="block-info">
               <div class="block-title">Treino D</div>
               <div class="block-sub">6 exercícios</div>
+              <div class="last-date" id="last-date-D"></div>
             </div>
           </div>
 
@@ -1321,15 +1455,18 @@ body::before {
           <div class="ex-num">1</div>
           <div class="ex-name" id="name-D_0">Banco romano</div>
           <div class="ex-muscle">Costas</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">3</div>
+          <div class="stat series-counter" onclick="tickSerie('D_0', '3')"
+               data-total="3" data-done="0" id="sc-D_0">
+            <div class="stat-val" id="sc-val-D_0">0/3</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-D_0"></div>
           </div>
 
           <div class="stat">
@@ -1371,15 +1508,18 @@ body::before {
           <div class="ex-num">2</div>
           <div class="ex-name" id="name-D_1">Belt squat</div>
           <div class="ex-muscle">Quadríceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('D_1', '4')"
+               data-total="4" data-done="0" id="sc-D_1">
+            <div class="stat-val" id="sc-val-D_1">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-D_1"></div>
           </div>
 
           <div class="stat">
@@ -1421,15 +1561,18 @@ body::before {
           <div class="ex-num">3</div>
           <div class="ex-name" id="name-D_2">Leg press horizontal</div>
           <div class="ex-muscle">Quadríceps</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">3</div>
+          <div class="stat series-counter" onclick="tickSerie('D_2', '3')"
+               data-total="3" data-done="0" id="sc-D_2">
+            <div class="stat-val" id="sc-val-D_2">0/3</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-D_2"></div>
           </div>
 
           <div class="stat">
@@ -1471,15 +1614,18 @@ body::before {
           <div class="ex-num">4</div>
           <div class="ex-name" id="name-D_3">Mesa flexora</div>
           <div class="ex-muscle">Posterior</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('D_3', '4')"
+               data-total="4" data-done="0" id="sc-D_3">
+            <div class="stat-val" id="sc-val-D_3">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-D_3"></div>
           </div>
 
           <div class="stat">
@@ -1521,15 +1667,18 @@ body::before {
           <div class="ex-num">5</div>
           <div class="ex-name" id="name-D_4">Hip thrust</div>
           <div class="ex-muscle">Glúteos</div>
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('D_4', '4')"
+               data-total="4" data-done="0" id="sc-D_4">
+            <div class="stat-val" id="sc-val-D_4">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-D_4"></div>
           </div>
 
           <div class="stat">
@@ -1571,15 +1720,18 @@ body::before {
           <div class="ex-num">6</div>
           <div class="ex-name" id="name-D_5">Cadeira solear</div>
           
+          
         </div>
 
         
 
         <div class="ex-stats">
 
-          <div class="stat">
-            <div class="stat-val">4</div>
+          <div class="stat series-counter" onclick="tickSerie('D_5', '4')"
+               data-total="4" data-done="0" id="sc-D_5">
+            <div class="stat-val" id="sc-val-D_5">0/4</div>
             <div class="stat-lbl">Séries</div>
+            <div class="series-dots" id="sc-dots-D_5"></div>
           </div>
 
           <div class="stat">
@@ -1994,6 +2146,8 @@ function toggleEx(id) {
   const card = document.getElementById('card-' + id);
   card.classList.toggle('done');
   checkFinish();
+  const lbl = card.closest('.treino-block')?.dataset.label;
+  if (lbl) updateProgress(lbl);
 }
 
 function checkFinish() {
@@ -2049,6 +2203,8 @@ function finalizarTreino(label) {
     localStorage.setItem('hist_' + ex, JSON.stringify(hist));
   });
 
+  localStorage.setItem('last_treino_' + label, data);
+  loadLastDate(label);
   const btn = document.querySelector(`#finish-${label} .finish-btn`);
   btn.innerText = '✔ Histórico Salvo!';
   btn.style.background = '#27AE60';
@@ -2086,6 +2242,10 @@ function enviarWhatsapp(label) {
     linhas.join('\n') +
     `\n\n*Resultado:* ✅ ${evoluiu} evoluíram · ➡️ ${manteve} mantiveram · ⚠️ ${regrediu} regrediram`;
 
+  const nota = (document.getElementById('nota-' + label)?.value || '').trim();
+  if (nota) msg += '
+
+📝 *Como foi:* ' + nota;
   const url = `https://wa.me/${WPP}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 }
@@ -2110,6 +2270,84 @@ function startTimer(seconds) {
     }
   }, 1000);
 }
+
+// ── TEMA ─────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  const light = document.body.classList.toggle('light');
+  localStorage.setItem('theme', light ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = light ? '☀️' : '🌙';
+}
+(function() {
+  if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light');
+    const b = document.getElementById('theme-btn');
+    if (b) b.textContent = '☀️';
+  }
+})();
+
+// ── PROGRESSO ─────────────────────────────────────────────────────────────────
+function updateProgress(label) {
+  const block = document.getElementById('treino-' + label);
+  if (!block) return;
+  const total   = parseInt(block.dataset.total);
+  const checked = block.querySelectorAll('.ex-check:checked').length;
+  const pct     = total > 0 ? Math.round((checked / total) * 100) : 0;
+  const bar     = document.getElementById('prog-' + label);
+  if (bar) bar.style.width = pct + '%';
+}
+
+// ── DATA ÚLTIMO TREINO ────────────────────────────────────────────────────────
+function loadLastDate(label) {
+  const date = localStorage.getItem('last_treino_' + label);
+  const el   = document.getElementById('last-date-' + label);
+  if (el && date) el.textContent = 'Último: ' + date;
+}
+
+// ── CONTADOR DE SÉRIES ────────────────────────────────────────────────────────
+function tickSerie(id, totalStr) {
+  const total = parseInt(totalStr) || 4;
+  const el    = document.getElementById('sc-' + id);
+  if (!el) return;
+  let done = parseInt(el.dataset.done) || 0;
+  done = done >= total ? 0 : done + 1;
+  el.dataset.done = done;
+  const valEl = document.getElementById('sc-val-' + id);
+  if (valEl) valEl.textContent = done + '/' + total;
+  const dotsEl = document.getElementById('sc-dots-' + id);
+  if (dotsEl) {
+    dotsEl.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const d = document.createElement('div');
+      d.className = 'series-dot' + (i < done ? ' done' : '');
+      dotsEl.appendChild(d);
+    }
+  }
+}
+
+// ── COMPARTILHAR ──────────────────────────────────────────────────────────────
+function compartilhar(label) {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Treino ' + label + ' — ' + ALUNO,
+      text: 'Minha ficha de treino personalizada',
+      url: window.location.href
+    }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => alert('Link copiado!'))
+      .catch(() => alert('Copie o link da barra de endereços.'));
+  }
+}
+
+// ── OFFLINE ───────────────────────────────────────────────────────────────────
+window.addEventListener('online',  () => { document.getElementById('offline-banner').style.display = 'none'; });
+window.addEventListener('offline', () => { document.getElementById('offline-banner').style.display = 'block'; });
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.treino-block').forEach(block => {
+  const label = block.dataset.label;
+  if (label) { updateProgress(label); loadLastDate(label); }
+});
 
 // ── CARGAS — salvar e exibir histórico ────────────────────────────────────────
 function salvarCarga(input) {
